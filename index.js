@@ -4,10 +4,7 @@ const axios = require('axios');
 
 var app = express()
 app.use(express.json())
-let corsOptions = {
-    origin: '*'
-}
-app.use(cors(corsOptions))
+
 
 
 
