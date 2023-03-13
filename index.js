@@ -8,7 +8,8 @@ let corsOptions = {
     origin: '*'
 }
 app.use(cors(corsOptions))
-app.options('*', cors(corsOptions));
+
+
 
 
 const sendTranscriptToApi = async (transcript, auth, format) => {
@@ -40,6 +41,16 @@ const sendTranscriptToApi = async (transcript, auth, format) => {
     }
 }
 
+
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Origin');
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(200);
+    }
+    next();
+  });
 
 app.post('/summarize', async (req, res) => {
     if (!req.header("Authorization")) {
