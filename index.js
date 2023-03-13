@@ -1,9 +1,9 @@
-import axios from 'axios';
-import express from 'express'
-const app = express()
+var express = require('express')
+var app = express()
+app.use(express.json())
+const axios = require('axios');
 
 const sendTranscriptToApi = async (transcript, auth, format) => {
-
     let formats = {
         sbar: "SBAR format (situation, background, assessment, recommendation)",
         soap: "SOAP format (subjective, objective, assessment, plan)",
@@ -22,8 +22,8 @@ const sendTranscriptToApi = async (transcript, auth, format) => {
         });
 
         const output = {
-            transcript: transcript,
-            data: response.data
+            format: format,
+            content: response.data.choices[0].message.content
         }
 
         return output
@@ -33,12 +33,13 @@ const sendTranscriptToApi = async (transcript, auth, format) => {
 }
 
 
-app.post('/summarize', (req, res) => {
+app.post('/summarize', async (req, res) => {
     if (!req.header("Authorization")) {
         return res.status(400).send('Missing Authorization: Bearer header');
     } else {
         let auth = req.header("Authorization")
-        let output = sendTranscriptToApi(req.body.transcript, auth, req.body.format)
+        console.log(req.body)
+        let output = await sendTranscriptToApi(req.body.transcript, auth, req.body.format)
         return res.send(output)
     }  
 })
