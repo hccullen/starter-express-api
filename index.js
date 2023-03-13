@@ -5,10 +5,12 @@ const axios = require('axios');
 var app = express()
 app.use(express.json())
 let corsOptions = {
-    origin : ['https://efh9cg.csb.app'],
- }
- 
- app.use(cors(corsOptions))
+    origin: '*',
+    methods: ['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}
+
+app.use(cors(corsOptions))
 
 
 const sendTranscriptToApi = async (transcript, auth, format) => {
@@ -21,7 +23,7 @@ const sendTranscriptToApi = async (transcript, auth, format) => {
     try {
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: "gpt-3.5-turbo",
-            messages: [{"role": "user", "content": `Convert the following dialogue from a patient consultation into a short medical note, with a section covering the patient details, with the remaining using the ${formatPhrase}: ${transcript}`}]
+            messages: [{ "role": "user", "content": `Convert the following dialogue from a patient consultation into a short medical note, with a section covering the patient details, with the remaining using the ${formatPhrase}: ${transcript}` }]
         }, {
             headers: {
                 'Content-Type': 'application/json',
@@ -49,6 +51,6 @@ app.post('/summarize', async (req, res) => {
         console.log(req.body)
         let output = await sendTranscriptToApi(req.body.transcript, auth, req.body.format)
         return res.send(output)
-    }  
+    }
 })
 app.listen(process.env.PORT || 3000)
