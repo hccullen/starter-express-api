@@ -5,12 +5,10 @@ const axios = require('axios');
 var app = express()
 app.use(express.json())
 let corsOptions = {
-    origin: '*',
-    methods: ['POST', 'GET', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    origin: '*'
 }
-
 app.use(cors(corsOptions))
+app.options('*', cors(corsOptions));
 
 
 const sendTranscriptToApi = async (transcript, auth, format) => {
