@@ -1,7 +1,15 @@
 var express = require('express')
+const axios = require('axios');
+
+
 var app = express()
 app.use(express.json())
-const axios = require('axios');
+let corsOptions = {
+    origin : ['https://efh9cg.csb.app'],
+ }
+ 
+ app.use(cors(corsOptions))
+
 
 const sendTranscriptToApi = async (transcript, auth, format) => {
     let formats = {
