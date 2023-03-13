@@ -19,7 +19,7 @@ const sendTranscriptToApi = async (transcript, auth, format) => {
     try {
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: "gpt-3.5-turbo",
-            messages: [{ "role": "user", "content": `Convert the following dialogue from a patient consultation into a short medical note, with a section covering the patient details, with the remaining using the ${formatPhrase}: ${transcript}` }]
+            messages: [{ "role": "user", "content": `Convert the following dialogue from a patient consultation into a short medical note, with a section covering the patient details, with the remaining using the ${formatPhrase}. If there isn't sufficient information, skip the section: ${transcript}` }]
         }, {
             headers: {
                 'Content-Type': 'application/json',
