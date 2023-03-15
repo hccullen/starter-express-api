@@ -75,6 +75,8 @@ const getTriageSummary = async (note, auth) => {
                 'Authorization': auth
             }
         });
+        
+        console.log(`Convert the following questions and answers about a patient into a short summary that a nurse might write. Use the SOAP format: ${note}`)
 
         const output = {
             content: response.data.choices[0].message.content
