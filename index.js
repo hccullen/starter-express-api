@@ -1,10 +1,10 @@
 var express = require('express')
 const axios = require('axios');
-
+const fileUpload = require('express-fileupload');
 
 var app = express()
 app.use(express.json())
-
+app.use(fileUpload());
 
 
 
@@ -33,6 +33,26 @@ const sendTranscriptToApi = async (transcript, auth, format) => {
         }
 
         return output
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const sendAudioFileToApi = async (file, auth) => {
+
+    try {
+        const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', {
+            file: file,
+            model: "whisper-1",
+            prompt: "Okay. Thank you for that. And right now, are you experiencing any chest pain that gets worse when you taken a deep breath or when you cough?"
+        }, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${apiKey}`
+            }
+        });
+
+        sendTranscriptToApi(response.data.text, apiKey, 'soap')
     } catch (error) {
         console.error(error);
     }
@@ -128,6 +148,17 @@ app.post('/code', async (req, res) => {
         let auth = req.header("Authorization")
         console.log(req.body)
         let output = await getCodesFromApi(req.body.note, auth)
+        return res.send(output)
+    }
+})
+
+app.post('/transcribe', async (req, res) => {
+    if (!req.header("Authorization")) {
+        return res.status(400).send('Missing Authorization: Bearer header');
+    } else {
+        let auth = req.header("Authorization")
+        console.log(req.body)
+        let output = await sendAudioFileToApi(req.files.audio, auth)
         return res.send(output)
     }
 })
