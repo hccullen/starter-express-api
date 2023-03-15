@@ -52,7 +52,11 @@ const sendAudioFileToApi = async (file, auth) => {
             }
         });
 
-        sendTranscriptToApi(response.data.text, apiKey, 'soap')
+        const output = {
+            content: response.data.text
+        }
+
+        return output
     } catch (error) {
         console.error(error);
     }
