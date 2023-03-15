@@ -39,6 +39,30 @@ const sendTranscriptToApi = async (transcript, auth, format) => {
 }
 
 
+const getCodesFromApi = async (note, auth) => {
+
+    try {
+        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+            model: "gpt-3.5-turbo",
+            messages: [{ "role": "user", "content": `Return a bullet point list of any related ICD-10 and SNOMED codes from this note: ${note}` }]
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': auth
+            }
+        });
+
+        const output = {
+            content: response.data.choices[0].message.content
+        }
+
+        return output
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
@@ -56,6 +80,17 @@ app.post('/summarize', async (req, res) => {
         let auth = req.header("Authorization")
         console.log(req.body)
         let output = await sendTranscriptToApi(req.body.transcript, auth, req.body.format)
+        return res.send(output)
+    }
+})
+
+app.post('/code', async (req, res) => {
+    if (!req.header("Authorization")) {
+        return res.status(400).send('Missing Authorization: Bearer header');
+    } else {
+        let auth = req.header("Authorization")
+        console.log(req.body)
+        let output = await getCodesFromApi(req.body.note, auth)
         return res.send(output)
     }
 })
