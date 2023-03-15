@@ -116,7 +116,7 @@ app.post('/summarize-nal', async (req, res) => {
     } else {
         let auth = req.header("Authorization")
         console.log(req.body)
-        let output = await getTriageSummary(req.body.body, auth)
+        let output = await getTriageSummary(req.body.note, auth)
         return res.send(output)
     }
 })
