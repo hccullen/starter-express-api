@@ -1,10 +1,11 @@
 var express = require('express')
 const axios = require('axios');
-const fileUpload = require('express-fileupload');
+const multer  = require('multer')
 
 var app = express()
 app.use(express.json())
 app.use(fileUpload());
+const upload = multer({})
 
 
 
@@ -39,7 +40,7 @@ const sendTranscriptToApi = async (transcript, auth, format) => {
 }
 
 const sendAudioFileToApi = async (file, auth) => {
-
+    console.log("Crash #2")
     try {
         const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', {
             file: file,
@@ -51,7 +52,6 @@ const sendAudioFileToApi = async (file, auth) => {
                 'Authorization': `Bearer ${auth}`
             }
         });
-
         const output = {
             content: response.data.text
         }
@@ -156,13 +156,13 @@ app.post('/code', async (req, res) => {
     }
 })
 
-app.post('/transcribe', async (req, res) => {
+app.post('/transcribe', upload.single('audio'), async (req, res) => {
     if (!req.header("Authorization")) {
         return res.status(400).send('Missing Authorization: Bearer header');
     } else {
         let auth = req.header("Authorization")
         console.log(req.body)
-        let output = await sendAudioFileToApi(req.files.audio, auth)
+        let output = await sendAudioFileToApi(req.file, auth)
         return res.send(output)
     }
 })
