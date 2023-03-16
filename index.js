@@ -48,7 +48,7 @@ const sendAudioFileToApi = async (file, auth) => {
         }, {
             headers: {
                 'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${auth}`
+                'Authorization': auth
             }
         });
         const output = {
