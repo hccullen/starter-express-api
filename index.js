@@ -3,8 +3,7 @@ const axios = require('axios');
 const multer  = require('multer')
 
 var app = express()
-app.use(express.json())
-app.use(fileUpload());
+app.use(express.json());
 const upload = multer({})
 
 
