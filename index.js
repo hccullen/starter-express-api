@@ -49,11 +49,12 @@ const sendAudioFileToApi = async (file, auth) => {
 
         const formData = new FormData();
         console.log("checkpoint 1")
-        formData.append('audio', file.buffer, { filename: file.originalname });
-        console.log("checkpoint 2")
         formData.append('model', 'whisper-1');
-        console.log("checkpoint 3")
+        console.log("checkpoint 2")
         formData.append('prompt', 'Okay. Thank you for that. And right now, are you experiencing any chest pain that gets worse when you taken a deep breath or when you cough?');
+        console.log("checkpoint 3")
+        console.log(file.originalname)
+        formData.append('audio', file.buffer, file.originalname);
     
         console.log("checkpoint 4")
         const headers = {
