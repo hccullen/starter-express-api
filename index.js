@@ -44,6 +44,7 @@ const sendTranscriptToApi = async (transcript, auth, format) => {
 
 const sendAudioFileToApi = async (file, auth) => {
 
+    const url = 'https://api.openai.com/v1/audio/transcriptions';
     console.log("checkpoint 1")
     const blob = new Blob([file.buffer])
     console.log(file.size)
