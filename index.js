@@ -53,12 +53,13 @@ const sendAudioFileToApi = async (file, auth) => {
           Authorization: auth
         };
     
+        console.log(formData)
         const response = await axios.post(url, formData, { headers });
+        console.log(response)
     
         const output = {
             content: response.data.text
         }
-        console.log(response.data)
         console.log(output)
         return output
 
