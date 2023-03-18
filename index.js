@@ -39,26 +39,30 @@ const sendTranscriptToApi = async (transcript, auth, format) => {
 }
 
 const sendAudioFileToApi = async (file, auth) => {
-    console.log("Crash #2")
     try {
-        const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', {
-            file: file,
-            model: "whisper-1",
-            prompt: "Okay. Thank you for that. And right now, are you experiencing any chest pain that gets worse when you taken a deep breath or when you cough?"
-        }, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': auth
-            }
-        });
+        const url = 'https://api.openai.com/v1/audio/transcriptions'; // replace with your API endpoint
+    
+        const formData = new FormData();
+        formData.append('audio', file.buffer, { filename: file.originalname });
+        formData.append('model', 'whisper-1');
+        formData.append('prompt', 'Okay. Thank you for that. And right now, are you experiencing any chest pain that gets worse when you taken a deep breath or when you cough?');
+    
+        const headers = {
+          Authorization: auth
+        };
+    
+        const response = await axios.post(url, formData, { headers });
+    
         const output = {
             content: response.data.text
         }
 
         return output
-    } catch (error) {
-        console.error(error);
-    }
+
+      } catch (error) {
+        return error
+      }
+
 }
 
 
@@ -158,11 +162,7 @@ app.post('/transcribe', upload.single('audio'), async (req, res) => {
         return res.status(400).send('Missing Authorization: Bearer header');
     } else {
         let auth = req.header("Authorization")
-        console.log(req.file.fieldname)
-        console.log(req.file.originalname)
-        console.log(req.file.encoding)
-        console.log(req.file.mimetype)
-        let output = await sendAudioFileToApi(req.file.buffer, auth)
+        let output = await sendAudioFileToApi(req.file, auth)
         return res.send(output)
     }
 })
