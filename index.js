@@ -56,7 +56,8 @@ const sendAudioFileToApi = async (file, auth) => {
         const output = {
             content: response.data.text
         }
-
+        console.log(response.data)
+        console.log(output)
         return output
 
       } catch (error) {
