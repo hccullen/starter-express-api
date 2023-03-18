@@ -5,8 +5,9 @@ const multer  = require('multer')
 var app = express()
 app.use(express.json());
 const upload = multer({ 
-    storage: multer.memoryStorage(),
-    limits: { fileSize: 1024 * 1024 * 40 } // limit file size to 10 MB
+    // storage: multer.memoryStorage(),
+    dest: 'tmp',
+    limits: { fileSize: 1024 * 1024 * 6 } // limit file size to 10 MB
   });
 
 
