@@ -158,8 +158,11 @@ app.post('/transcribe', upload.single('audio'), async (req, res) => {
         return res.status(400).send('Missing Authorization: Bearer header');
     } else {
         let auth = req.header("Authorization")
-        console.log(req.body)
-        let output = await sendAudioFileToApi(req.file, auth)
+        console.log(req.file.fieldname)
+        console.log(req.file.originalname)
+        console.log(req.file.encoding)
+        console.log(req.file.mimetype)
+        let output = await sendAudioFileToApi(req.file.buffer, auth)
         return res.send(output)
     }
 })
