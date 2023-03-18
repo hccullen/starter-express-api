@@ -57,7 +57,7 @@ const sendAudioFileToApi = async (file, auth) => {
         formData.append('prompt', 'Okay. Thank you for that. And right now, are you experiencing any chest pain that gets worse when you taken a deep breath or when you cough?');
         console.log("checkpoint 3")
         console.log(file.originalname)
-        formData.append('audio', blob, file.originalname);
+        formData.append('file', blob, file.originalname);
         console.log("checkpoint 4")
         const headers = {
           Authorization: auth
