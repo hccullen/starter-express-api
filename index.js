@@ -43,40 +43,35 @@ const sendTranscriptToApi = async (transcript, auth, format) => {
 }
 
 const sendAudioFileToApi = async (file, auth) => {
-    try {
-        const url = 'https://api.openai.com/v1/audio/transcriptions'; // replace with your API endpoint
-    
-        console.log("hi friends", url)
 
-        const formData = new FormData();
-        console.log("checkpoint 1")
-        formData.append('model', 'whisper-1');
-        console.log("checkpoint 2")
-        formData.append('prompt', 'Okay. Thank you for that. And right now, are you experiencing any chest pain that gets worse when you taken a deep breath or when you cough?');
-        console.log("checkpoint 3")
-        console.log(file.originalname)
-        formData.append('audio', file.buffer, file.originalname);
-    
-        console.log("checkpoint 4")
-        const headers = {
-          Authorization: auth
-        };
-    
-        console.log("checkpoint 5")
-        console.log(formData)
-        const response = await axios.post(url, formData, { headers });
-        console.log("checkpoint 6")
-        console.log(response)
-    
+    console.log("checkpoint 1")
+    let fileBuff = file.buffer
+    console.log("checkpoint 2")
+    try {
+        const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', {
+            file: fileBuff,
+            model: "whisper-1",
+            prompt: "Okay. Thank you for that. And right now, are you experiencing any chest pain that gets worse when you taken a deep breath or when you cough?"
+        }, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': auth
+            }
+        });
+
+        // sendTranscriptToApi(response.data.text, apiKey)
+        console.log(response.data.text)
         const output = {
             content: response.data.text
         }
         console.log(output)
         return output
+    } catch (error) {
+        console.error(error);
+    }
 
-      } catch (error) {
-        return error
-      }
+
+  
 
 }
 
