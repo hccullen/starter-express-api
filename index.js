@@ -46,6 +46,7 @@ const sendAudioFileToApi = async (file, auth) => {
 
     console.log("checkpoint 1")
     let fileBuff = file.buffer
+    console.log(file.size)
     console.log("checkpoint 2")
     try {
         const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', {
