@@ -42,6 +42,8 @@ const sendAudioFileToApi = async (file, auth) => {
     try {
         const url = 'https://api.openai.com/v1/audio/transcriptions'; // replace with your API endpoint
     
+        console.log("hi friends", url)
+
         const formData = new FormData();
         formData.append('audio', file.buffer, { filename: file.originalname });
         formData.append('model', 'whisper-1');
