@@ -19,7 +19,7 @@ const sendTranscriptToApi = async (transcript, auth, format) => {
     try {
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
             model: "gpt-3.5-turbo",
-            messages: [{ "role": "user", "content": `Convert the following dialogue from a patient consultation into a short medical note, with a section covering the patient details, with the remaining using the ${formatPhrase}. Only state things known from the text. If there isn't sufficient information for a section, just leave it blank: ${transcript}` }]
+            messages: [{ "role": "user", "content": `Convert the following dialogue from a patient consultation into a short medical note, with a section covering the patient details, with the remaining using the ${formatPhrase}. Only mention things known from the text. If there isn't sufficient information for a section, just leave it blank: ${transcript}` }]
         }, {
             headers: {
                 'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ const getCodesFromApi = async (note, auth) => {
 
     try {
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-            model: "gpt-3.5-turbo",
+            model: "gpt-4",
             messages: [{ "role": "user", "content": `Return a bullet point list of any related ICD-10 and SNOMED codes from this note: ${note}` }]
         }, {
             headers: {
@@ -90,8 +90,8 @@ const getTriageSummary = async (note, auth) => {
 
     try {
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-            model: "gpt-3.5-turbo",
-            messages: [{ "role": "user", "content": `Convert the following facts about a patient into a short summary that a nurse might write. Use the SOAP format: ${note}` }]
+            model: "gpt-4",
+            messages: [{ "role": "user", "content": `Convert the following facts about a patient into a short summary that a nurse might write. Use the SOAP format. Leave sections blank that do not reflect the facts below: ${note}` }]
         }, {
             headers: {
                 'Content-Type': 'application/json',
@@ -99,8 +99,6 @@ const getTriageSummary = async (note, auth) => {
             }
         });
         
-        console.log(`Convert the following questions and answers about a patient into a short summary that a nurse might write. Use the SOAP format: ${note}`)
-
         const output = {
             content: response.data.choices[0].message.content
         }
