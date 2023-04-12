@@ -71,6 +71,7 @@ const sendAudioFileToApi = async (file, auth) => {
         return output
     } catch (error) {
         console.error(error);
+        return "error"
     }
 
 }
@@ -253,13 +254,14 @@ const getNonClinicalSummary = async (transcript, auth) => {
 
 const handleDocumentCreation = async (file, auth) => {
     let note;
-    const transcript = await sendAudioFileToApi(file, auth);
-    const meta = await getMetadata(transcript, auth);
+    let transcript = await sendAudioFileToApi(file, auth);
+    if(transcript === "error") return "error";
+    const meta = await getMetadata(transcript.content, auth);
     if (meta.category = "medical") {
-        note = await getClinicalNotesCodes(transcript, auth);
+        note = await getClinicalNotesCodes(transcript.content, auth);
         note.type = "Clinical Note"
     } else {
-        note = await getNonClinicalSummary(transcript, auth);
+        note = await getNonClinicalSummary(transcript.content, auth);
         note.type = "Call Summary"
     }
     return {
